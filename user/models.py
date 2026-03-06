@@ -13,10 +13,11 @@ class User(AbstractUser):
     role = models.CharField(max_length=20,choices=permission_choices)
     organization = models.ForeignKey(Organization,related_name='user',on_delete=models.CASCADE,null=True,blank=True)
     practice = models.ForeignKey(Practice,on_delete=models.CASCADE,related_name='user',null=True,blank=True)
+    first_login=models.BooleanField(default=True)
 
     def __str__(self):
             return f"{self.username} - {self.get_role_display()}"
-    def save(self,*args, **kwargs):
-        if len(self.password) < 30: 
-            self.set_password(self.password)
+    def save(self,*args, **kwargs): 
+        if not self.pk:
+            self.set_password('moin')
         super().save(*args,**kwargs)
